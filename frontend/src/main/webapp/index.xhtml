@@ -8,13 +8,18 @@
   <h:head>
   </h:head>
   <h:body>
-<!--    <p:galleria value="#{fileUploader.images}" var="image" panelWidth="500" panelHeight="313" showCaption="true">
-      <p:graphicImage value="#{fileUploader.getImage(image)}"/>
-    </p:galleria>-->
-    <h:form enctype="multipart/form-data">
-      <p:growl id="messages" showDetail="true" />
-      <p:fileUpload value="#{fileUploader.file}" mode="simple" />
-      <p:commandButton value="Submit" ajax="false" actionListener="#{fileUploader.upload}" />
-    </h:form>
+    <h:panelGrid columns="2">
+      <p:galleria value="#{fileUploader.images}" var="image" panelWidth="500" panelHeight="313" showCaption="true">
+        <p:graphicImage value="../imageLoader?img=#{image}" title="Random user images..." width="500" height="313"/>
+      </p:galleria>
+      <h:form enctype="multipart/form-data">
+        <p:growl id="messages" showDetail="true" />
+        <h:panelGrid columns="1">
+          <h:outputLabel value="Please select an image to upload" />
+          <p:fileUpload value="#{fileUploader.file}" mode="simple" />
+          <p:commandButton value="Get it up there!" ajax="false" actionListener="#{fileUploader.upload}" />
+        </h:panelGrid>
+      </h:form>
+    </h:panelGrid>
   </h:body>
 </html>

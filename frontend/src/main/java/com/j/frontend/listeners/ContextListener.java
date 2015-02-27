@@ -27,6 +27,7 @@ public class ContextListener implements ServletContextListener {
     } catch (SevereException ex) {
       Logger.getLogger(ContextListener.class.getName()).log(Level.SEVERE, null, ex);
     }
+    DiskManager.initCache();
   }
 
   @Override
