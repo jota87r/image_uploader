@@ -8,9 +8,9 @@
   <h:head>
   </h:head>
   <h:body>
-    <p:galleria value="#{fileUploader.images}" var="image" panelWidth="500" panelHeight="313" showCaption="true">
+<!--    <p:galleria value="#{fileUploader.images}" var="image" panelWidth="500" panelHeight="313" showCaption="true">
       <p:graphicImage value="#{fileUploader.getImage(image)}"/>
-    </p:galleria>
+    </p:galleria>-->
     <h:form enctype="multipart/form-data">
       <p:growl id="messages" showDetail="true" />
       <p:fileUpload value="#{fileUploader.file}" mode="simple" />

@@ -14,6 +14,8 @@ import java.util.concurrent.ConcurrentLinkedQueue;
  */
 class FileCache {
   
+  private final static int CACHE_NAME_SIZE = 100;
+  
   private static FileCache instance;
   
   private ConcurrentLinkedQueue<String> fileNames;
@@ -22,9 +24,25 @@ class FileCache {
     fileNames = new ConcurrentLinkedQueue<>();
   }
   
-  public final static FileCache instance() {
+  final static FileCache instance() {
     return instance == null ? instance = new FileCache() : instance;
   }
   
+  void addNameToCache(String name) {
+    if (limitReached())
+      fileNames.poll();
+    fileNames.add(name);
+  }
   
+  String getNameFromCache() {
+    return fileNames.peek();
+  }
+  
+  boolean limitReached() {
+    return fileNames.size() > CACHE_NAME_SIZE;
+  }
+  
+  Object[] getNames() {
+    return fileNames.toArray();
+  }
 }

@@ -33,11 +33,19 @@ public class DiskManager {
     }
   }
   
+  public static void initCache() {
+    File[] files = new File(path).listFiles();
+    for (int i = 0; i < files.length && !FileCache.instance().limitReached(); i++)
+      FileCache.instance().addNameToCache(files[i].getName());
+  }
+  
   public static void write(InputStream in) throws SevereException, MinorException {
-    try (OutputStream out = new FileOutputStream(createFile())) {
+    File file = createFile();
+    try (OutputStream out = new FileOutputStream(file)) {
       byte[] buffer = new byte[BUFFER_SIZE];
       for (int bytesRead = in.read(buffer); bytesRead != -1; bytesRead = in.read(buffer))
         out.write(buffer, 0, bytesRead);
+      FileCache.instance().addNameToCache(file.getName());
     } catch (IOException ex) {
       throw new SevereException(ex);
     } finally {
@@ -59,8 +67,8 @@ public class DiskManager {
     return data == null ? new byte[0] : data;
   }
   
-  public static String[] getRandomFileNames() {
-    Files.list(path);
+  public static Object[] getRandomFileNames() {
+    return FileCache.instance().getNames();
   }
   
   private static File createFile() {
