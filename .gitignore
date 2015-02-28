@@ -1,2 +1,4 @@
 .nb-gradle
 .gradle
+/backend/build/
+/frontend/build/

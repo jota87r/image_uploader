@@ -25,6 +25,10 @@ public class FileUploader {
   private UploadedFile file;
 
   public void upload() {
+    if (file != null && file.getSize() > 0) uploadImpl();
+  }
+  
+  private void uploadImpl() {
     try {
       DiskManager.write(file.getInputstream());
       MessageManager.setMessage("Great!", "Your photo has been uploaded");
