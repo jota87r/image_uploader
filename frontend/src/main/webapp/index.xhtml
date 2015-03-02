@@ -6,6 +6,7 @@
       xmlns:ui="http://java.sun.com/jsf/facelets"
       xmlns:p="http://primefaces.org/ui">
   <h:head>
+    <script src="https://apis.google.com/js/client:platform.js" async="true" defer="true"></script>
   </h:head>
   <h:body>
     <span id="signinButton">
@@ -14,15 +15,16 @@
         data-callback="signinCallback"
         data-clientid="951004337628-hj4saq10csioe2i6uder7j70591h21ci.apps.googleusercontent.com"
         data-cookiepolicy="single_host_origin"
-        data-requestvisibleactions="http://schemas.google.com/AddActivity"
+        data-requestvisibleactions="http://schema.org/AddAction"
         data-scope="https://www.googleapis.com/auth/plus.login">
       </span>
     </span>
+    <p:button value="Sign-out" onclick="gapi.auth.signOut(); return;" rendered="#{fileUploader.accessToken != null}" />
     <h:panelGrid columns="2">
       <p:galleria value="#{fileUploader.images}" var="image" panelWidth="500" panelHeight="313" showCaption="true">
         <p:graphicImage value="../imageLoader?img=#{image}" title="Random user images..." width="500" height="313"/>
       </p:galleria>
-      <h:form enctype="multipart/form-data">
+      <h:form id="uploadFile" enctype="multipart/form-data" rendered="#{fileUploader.accessToken != null}" >
         <p:growl id="messages" showDetail="true" />
         <h:panelGrid columns="1">
           <h:outputLabel value="Please select an image to upload" />
@@ -30,19 +32,19 @@
           <p:commandButton value="Get it up there!" ajax="false" actionListener="#{fileUploader.upload}" />
         </h:panelGrid>
       </h:form>
-      <p:graphicImage value="http://www.budcad.com/Motorcycling/wp-content/uploads/2013/01/bmw-dakar-motorcycle-wallpaper.jpg" title="Random user images..." width="500" height="313"/>
+      <h:form id="token" rendered="#{fileUploader.accessToken == null}" >
+        <h:inputHidden id="accessToken" value="#{fileUploader.accessToken}" />
+      </h:form>
     </h:panelGrid>
   </h:body>
   <h:outputScript>
-    (function() {
-      var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
-      po.src = 'https://apis.google.com/js/client:plusone.js';
-      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
-    })();
     function signinCallback(authResult) {
-      if (authResult['access_token']) {
+      if (authResult.access_token) {
         document.getElementById('signinButton').setAttribute('style', 'display: none');
-      } else if (authResult['error']) {
+        $('[id$="accessToken"]')[0].value = authResult.access_token;
+        $('[id$="token"]')[0].submit();
+      } else if (authResult.error) {
+        console.log(authResult.error);
       }
     }
   </h:outputScript>

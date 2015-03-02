@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import org.primefaces.model.UploadedFile;
 
@@ -20,9 +21,11 @@ import org.primefaces.model.UploadedFile;
  * @author jonatan
  */
 @ManagedBean
+@SessionScoped
 public class FileUploader {
   
   private UploadedFile file;
+  private String accessToken;
 
   public void upload() {
     if (file != null && file.getSize() > 0) uploadImpl();
@@ -31,6 +34,7 @@ public class FileUploader {
   private void uploadImpl() {
     try {
       DiskManager.write(file.getInputstream());
+      file = null;
       MessageManager.setMessage("Great!", "Your photo has been uploaded");
     } catch (IOException | SevereException | NullPointerException ex) {
       MessageManager.setMessage("Oops!", "Try again...");
@@ -49,6 +53,14 @@ public class FileUploader {
 
   public void setFile(UploadedFile file) {
     this.file = file;
+  }
+  
+  public String getAccessToken() {
+    return accessToken;
+  }
+
+  public void setAccessToken(String accessToken) {
+    this.accessToken = accessToken;
   }
   
   
